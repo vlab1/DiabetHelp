@@ -30,13 +30,13 @@ const AccountFoodSchema = new Schema(
         },
         account_id: {
             type: Schema.Types.ObjectId,
-            ref: "Accounts"
+            ref: 'Accounts',
         },
     },
     { timestamps: true }
 );
 
-AccountFoodSchema.post("findOneAndDelete", async function(result, next) { 
+AccountFoodSchema.post('findOneAndDelete', async function (result, next) {
     await FoodMenuModel.deleteMany({ food_id: result._id });
     next();
 });
@@ -53,7 +53,5 @@ AccountFoodSchema.pre(
         next();
     }
 );
-
-
 
 export default model<AccountFood>('AccountFood', AccountFoodSchema);

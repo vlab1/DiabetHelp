@@ -32,8 +32,8 @@ class FoodService {
             });
 
             return food;
-        } catch (error) {
-            throw new Error('Unable to create food');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -58,7 +58,7 @@ class FoodService {
                     name: name,
                     presize_equiv: presize_equiv,
                     relative_equiv: relative_equiv,
-                    presize_equiv_unit:  presize_equiv_unit,
+                    presize_equiv_unit: presize_equiv_unit,
                     relative_equiv_unit: relative_equiv_unit,
                     presize_equiv_gCHO: presize_equiv_gCHO,
                     relative_equiv_gCHO: relative_equiv_gCHO,
@@ -68,12 +68,12 @@ class FoodService {
             );
 
             if (!food) {
-                throw new Error('Unable to update food with thad id');
+                throw new Error('Unable to update food with that data');
             }
 
             return food;
-        } catch (error) {
-            throw new Error('Unable to change food');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -86,7 +86,7 @@ class FoodService {
             const food = await this.food.findByIdAndDelete(_id);
 
             if (!food) {
-                throw new Error('Unable to delete food with that id');
+                throw new Error('Unable to delete foodwith that data');
             }
 
             return food;
@@ -109,8 +109,8 @@ class FoodService {
             }
 
             return food;
-        } catch (error) {
-            throw new Error('Unable to find food');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -129,8 +129,8 @@ class FoodService {
             }
 
             return food;
-        } catch (error) {
-            throw new Error('Unable to find food');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 }

@@ -6,15 +6,15 @@ const FoodMenuSchema = new Schema(
         foodModel: {
             type: String,
             required: true,
-            enum: ['Food', 'AccountFood']
-          },
+            enum: ['Food', 'AccountFood'],
+        },
         food_id: {
             type: Schema.Types.ObjectId,
-            refPath: 'foodModel'
+            refPath: 'foodModel',
         },
         menu_id: {
             type: Schema.Types.ObjectId,
-            ref: "Menu"
+            ref: 'Menu',
         },
         count: {
             type: Number,
@@ -23,7 +23,6 @@ const FoodMenuSchema = new Schema(
             type: String,
             trim: true,
         },
-
     },
     { timestamps: true }
 );

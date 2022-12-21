@@ -4,7 +4,6 @@ const create = Joi.object({
     glucose: Joi.number(),
     comment: Joi.string(),
     date: Joi.date().default(Date.now),
-    account_id: Joi.string().hex().length(24),
     weight: Joi.number(),
 });
 
@@ -13,7 +12,6 @@ const update = Joi.object({
     glucose: Joi.number(),
     comment: Joi.string(),
     date: Joi.date(),
-    account_id: Joi.string().hex().length(24),
     weight: Joi.number(),
 });
 
@@ -26,13 +24,16 @@ const find = Joi.object({
     glucose: Joi.number(),
     comment: Joi.string(),
     date: Joi.date(),
-    account_id: Joi.string().hex().length(24),
     weight: Joi.number(),
 });
 
+const adminGet = Joi.object({
+    account_id: Joi.string().hex().length(24),
+});
 export default {
     create,
     update,
     delete0,
     find,
+    adminGet,
 };

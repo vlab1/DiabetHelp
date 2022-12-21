@@ -22,12 +22,12 @@ class RecordService {
                 comment,
                 date,
                 account_id,
-                weight
+                weight,
             });
 
             return record;
-        } catch (error) {
-            throw new Error('Unable to create record');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -43,6 +43,16 @@ class RecordService {
         weight: number
     ): Promise<Record | Error> {
         try {
+            const record_temp = await this.record.findById(_id);
+
+            if (!record_temp) {
+                throw new Error('Unable to find record');
+            }
+
+            if (record_temp.account_id.toString() !== account_id.toString()) {
+                throw new Error('You are not allowed to get this record');
+            }
+
             const record = await this.record
                 .findByIdAndUpdate(
                     _id,
@@ -50,7 +60,6 @@ class RecordService {
                         glucose: glucose,
                         comment: comment,
                         date: date,
-                        account_id: account_id,
                         weight: weight,
                     },
                     { new: true }
@@ -61,12 +70,12 @@ class RecordService {
                 });
 
             if (!record) {
-                throw new Error('Unable to update record with thad id');
+                throw new Error('Unable to update record with that data');
             }
 
             return record;
-        } catch (error) {
-            throw new Error('Unable to change record');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -74,20 +83,33 @@ class RecordService {
      * Attempt to delete record
      */
 
-    public async delete(_id: Schema.Types.ObjectId): Promise<Record | Error> {
+    public async delete(
+        _id: Schema.Types.ObjectId,
+        account_id: Schema.Types.ObjectId
+    ): Promise<Record | Error> {
         try {
+            const record_temp = await this.record.findById(_id);
+
+            if (!record_temp) {
+                throw new Error('Unable to delete record');
+            }
+
+            if (record_temp.account_id.toString() !== account_id.toString()) {
+                throw new Error('You are not allowed to delete this record');
+            }
+
             const record = await this.record.findByIdAndDelete(_id).populate({
                 path: 'account_id',
                 populate: { path: '_id' },
             });
 
             if (!record) {
-                throw new Error('Unable to delete record with that id');
+                throw new Error('Unable to delete record with that data');
             }
 
             return record;
-        } catch (error) {
-            throw new Error('Unable to delete record');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -100,7 +122,7 @@ class RecordService {
         try {
             const records = await this.record
                 .find({ account_id: account_id }, null, {
-                    sort: { createdAt: -1 },
+                    sort: { date: -1 },
                 })
                 .populate({
                     path: 'account_id',
@@ -112,8 +134,134 @@ class RecordService {
             }
 
             return records;
-        } catch (error) {
-            throw new Error('Unable to find records');
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    /**
+     * Attempt to get statistics
+     */
+    public async statistics(
+        account_id: Schema.Types.ObjectId
+    ): Promise<Record | Array<Record> | Error | Props> {
+        try {
+            const records = await this.record
+                .find({ account_id: account_id }, null, {
+                    sort: { date: 1 },
+                })
+                .populate({
+                    path: 'account_id',
+                    populate: { path: '_id' },
+                });
+
+            if (!records) {
+                throw new Error('Unable to find records');
+            }
+
+            const dateNow = new Date();
+
+            let weekAgo = new Date();
+            weekAgo.setDate(dateNow.getDate() - 7);
+
+            let monthAgo = new Date();
+            monthAgo.setDate(dateNow.getDate() - 30);
+
+            let yearAgo = new Date();
+            yearAgo.setDate(dateNow.getDate() - 365);
+
+            const recordsLastWeek = records.filter(
+                (item) => item.date >= weekAgo
+            ) as Array<Record>;
+
+            const recordsLastMonth = records.filter(
+                (item) => item.date >= monthAgo
+            ) as Array<Record>;
+
+            const recordsLastYear = records.filter(
+                (item) => item.date >= yearAgo
+            ) as Array<Record>;
+
+            const weeklyNumberRecords = recordsLastWeek.length;
+            const monthNumberRecords = recordsLastMonth.length;
+            const yearNumberRecords = recordsLastYear.length;
+
+            const weeklyMaximumGlucose = recordsLastWeek.sort(
+                (prev: Record, current: Record) =>
+                    prev.glucose < current.glucose ? 1 : -1
+            )[0] as Record;
+            const monthMaximumGlucose = recordsLastMonth.sort(
+                (prev: Record, current: Record) =>
+                    prev.glucose < current.glucose ? 1 : -1
+            )[0] as Record;
+            const yearMaximumGlucose = recordsLastYear.sort(
+                (prev: Record, current: Record) =>
+                    prev.glucose < current.glucose ? 1 : -1
+            )[0] as Record;
+
+            const weeklyMaximumWeight = recordsLastWeek.sort(
+                (prev: Record, current: Record) =>
+                    prev.weight < current.weight ? 1 : -1
+            )[0] as Record;
+            const monthMaximumWeight = recordsLastMonth.sort(
+                (prev: Record, current: Record) =>
+                    prev.weight < current.weight ? 1 : -1
+            )[0] as Record;
+            const yearMaximumWeight = recordsLastYear.sort(
+                (prev: Record, current: Record) =>
+                    prev.weight < current.weight ? 1 : -1
+            )[0] as Record;
+
+            const weeklyMinimumGlucose = recordsLastWeek.sort(
+                (prev: Record, current: Record) =>
+                    prev.glucose < current.glucose ? -1 : 1
+            )[0] as Record;
+            const monthMinimumGlucose = recordsLastMonth.sort(
+                (prev: Record, current: Record) =>
+                    prev.glucose < current.glucose ? -1 : 1
+            )[0] as Record;
+            const yearMinimumGlucose = recordsLastYear.sort(
+                (prev: Record, current: Record) =>
+                    prev.glucose < current.glucose ? -1 : 1
+            )[0] as Record;
+
+            const weeklyMinimumWeight = recordsLastWeek.sort(
+                (prev: Record, current: Record) =>
+                    prev.weight < current.weight ? -1 : 1
+            )[0] as Record;
+            const monthMinimumWeight = recordsLastMonth.sort(
+                (prev: Record, current: Record) =>
+                    prev.weight < current.weight ? -1 : 1
+            )[0] as Record;
+            const yearMinimumWeight = recordsLastYear.sort(
+                (prev: Record, current: Record) =>
+                    prev.weight < current.weight ? -1 : 1
+            )[0] as Record;
+
+            const statistics = {
+                recordsLastWeek,
+                recordsLastMonth,
+                recordsLastYear,
+                weeklyNumberRecords,
+                monthNumberRecords,
+                yearNumberRecords,
+                weeklyMaximumGlucose,
+                monthMaximumGlucose,
+                yearMaximumGlucose,
+                weeklyMaximumWeight,
+                monthMaximumWeight,
+                yearMaximumWeight,
+                weeklyMinimumGlucose,
+                monthMinimumGlucose,
+                yearMinimumGlucose,
+                weeklyMinimumWeight,
+                monthMinimumWeight,
+                yearMinimumWeight,
+            } as Props;
+
+            return statistics;
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -121,10 +269,14 @@ class RecordService {
      * Attempt to find records
      */
 
-    public async find(props: Props): Promise<Record | Array<Record> | Error> {
+    public async find(
+        props: Props,
+        account_id: Schema.Types.ObjectId
+    ): Promise<Record | Array<Record> | Error> {
         try {
+            props.account_id = account_id;
             const records = await this.record
-                .find(props, null, { sort: { createdAt: -1 } })
+                .find(props, null, { sort: { date: -1 } })
                 .populate({
                     path: 'account_id',
                     populate: { path: '_id' },
@@ -135,8 +287,49 @@ class RecordService {
             }
 
             return records;
-        } catch (error) {
-            throw new Error('Unable to find records');
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    /**
+     * Attempt to find all records
+     */
+    public async adminGet(
+        props: Props
+    ): Promise<Record | Array<Record> | Error> {
+        try {
+            const record = await this.record.find(props, null, {
+                sort: { date: 1 },
+            });
+
+            if (!record) {
+                throw new Error('Unable to find record');
+            }
+
+            return record;
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    /**
+     * Attempt to delete record
+     */
+
+    public async adminDelete(
+        _id: Schema.Types.ObjectId
+    ): Promise<Record | Error> {
+        try {
+            const record = await this.record.findByIdAndDelete(_id);
+
+            if (!record) {
+                throw new Error('Unable to delete record with that data');
+            }
+
+            return record;
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 }

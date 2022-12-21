@@ -35,13 +35,9 @@ const AccountSchema = new Schema(
         diabetes_type: {
             type: Number,
         },
-        localization: {
-            type: String,
-            trim: true,
-        },
-        // isPremium: {
-        //     type: Boolean,
-        //     default: false
+        // localization: {
+        //     type: String,
+        //     trim: true,
         // },
         high_sugar: {
             type: Number,
@@ -51,6 +47,23 @@ const AccountSchema = new Schema(
         },
         premiumExpires: {
             type: Date,
+        },
+        role: {
+            type: String,
+            default: 'User',
+            enum: ['User', 'Admin'],
+        },
+        phone: {
+            type: String,
+            trim: true,
+        },
+        paymentKeys: {
+            type: Array<string>,
+            default: []
+        },
+        allPaymentKeys: {
+            type: Array<string>,
+            default: []
         },
     },
     { timestamps: true }

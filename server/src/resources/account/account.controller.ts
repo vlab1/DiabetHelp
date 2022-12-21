@@ -5,11 +5,15 @@ import validationMiddleware from '@/middleware/validation.middleware';
 import validate from '@/resources/account/account.validation';
 import AccountService from '@/resources/account/account.service';
 import authenticated from '@/middleware/authenticated.middleware';
+import permission from '@/middleware/admin.permission.middleware';
+import Props from '@/utils/types/props.type';
+import Account from '@/resources/account/account.interface';
 
 class AccountController implements Controller {
     public path = '/account';
     public router = Router();
     private AccountService = new AccountService();
+    private client_url = process.env.CLIENT_URL;
 
     constructor() {
         this.initialiseRoutes();
@@ -38,6 +42,12 @@ class AccountController implements Controller {
             this.update
         );
         this.router.put(
+            `${this.path}/payment`,
+            validationMiddleware(validate.payment),
+            authenticated,
+            this.payment
+        );
+        this.router.put(
             `${this.path}/premium/renew`,
             validationMiddleware(validate.premiumRenew),
             authenticated,
@@ -49,13 +59,51 @@ class AccountController implements Controller {
             authenticated,
             this.updatePassword
         );
-        this.router.delete(
-            `${this.path}/delete`,
-            validationMiddleware(validate.delete0),
-            authenticated,
-            this.delete
-        );
+        this.router.delete(`${this.path}/delete`, authenticated, this.delete);
         this.router.get(`${this.path}`, authenticated, this.getAccount);
+
+        this.router.get(
+            `${this.path}/premium/status`,
+            authenticated,
+            this.getPremiumStatus
+        );
+
+        this.router.delete(
+            `${this.path}/admin/delete`,
+            validationMiddleware(validate.adminDelete),
+            authenticated,
+            permission,
+            this.adminDelete
+        );
+
+        this.router.get(
+            `${this.path}/admin/get`,
+            validationMiddleware(validate.adminGet),
+            authenticated,
+            permission,
+            this.adminGet
+        );
+        this.router.get(
+            `${this.path}/admin/find`,
+            validationMiddleware(validate.adminFind),
+            authenticated,
+            permission,
+            this.adminFind
+        );
+        this.router.put(
+            `${this.path}/admin/update/role`,
+            validationMiddleware(validate.adminUpdateRole),
+            authenticated,
+            permission,
+            this.adminUpdateRole
+        );
+        this.router.post(
+            `${this.path}/admin/create`,
+            validationMiddleware(validate.adminCreate),
+            authenticated,
+            permission,
+            this.adminCreate
+        );
     }
 
     private register = async (
@@ -72,7 +120,7 @@ class AccountController implements Controller {
                 name
             );
 
-            res.status(201).json({ token });
+            res.status(201).json({ data: token });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -88,7 +136,7 @@ class AccountController implements Controller {
 
             const token = await this.AccountService.login(email, password);
 
-            res.status(200).json({ token });
+            res.status(200).json({ data: token });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -107,8 +155,7 @@ class AccountController implements Controller {
                 passwordGoogle,
                 name
             );
-
-            res.status(200).json({ token });
+            res.status(200).json({ data: token });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -121,7 +168,6 @@ class AccountController implements Controller {
     ): Promise<Response | void> => {
         try {
             const {
-                _id,
                 name,
                 email,
                 password,
@@ -129,9 +175,9 @@ class AccountController implements Controller {
                 birth_date,
                 sex,
                 diabetes_type,
-                localization,
-                //isPremium,
+                // localization,
                 high_sugar,
+                phone,
                 low_sugar,
                 premiumExpires,
             } = req.body;
@@ -139,7 +185,7 @@ class AccountController implements Controller {
             const account_id = req.account._id;
 
             const account = await this.AccountService.update(
-                _id ? _id : account_id,
+                account_id,
                 name,
                 email,
                 password,
@@ -147,14 +193,14 @@ class AccountController implements Controller {
                 birth_date,
                 sex,
                 diabetes_type,
-                localization,
-                //isPremium,
+                // localization,
                 high_sugar,
                 low_sugar,
-                premiumExpires
+                premiumExpires,
+                phone
             );
 
-            res.status(200).json({ account });
+            res.status(200).json({ data: account });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -166,14 +212,38 @@ class AccountController implements Controller {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { days } = req.body;
+            const { days, key } = req.body;
 
-            const account = await this.AccountService.premiumRenew(
+            const account = (await this.AccountService.premiumRenew(
                 req.account,
-                days
+                days,
+                key
+            )) as Account;
+
+            res.status(200).json({ data: account });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private payment = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const { days, price, name, key } = req.body;
+
+            const url = await this.AccountService.payment(
+                req.account,
+                days,
+                price,
+                this.client_url as string,
+                name,
+                key
             );
 
-            res.status(200).json({ account });
+            res.status(200).json({ data: url });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -193,7 +263,7 @@ class AccountController implements Controller {
                 password
             );
 
-            res.status(200).json({ account });
+            res.status(200).json({ data: account });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -205,13 +275,10 @@ class AccountController implements Controller {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { _id } = req.body;
             const account_id = req.account._id;
-            const account = await this.AccountService.delete(
-                _id ? _id : account_id
-            );
+            const account = await this.AccountService.delete(account_id);
 
-            res.status(200).json({ account });
+            res.status(200).json({ data: account });
         } catch (error: any) {
             next(new HttpException(400, error.message));
         }
@@ -226,7 +293,130 @@ class AccountController implements Controller {
             return next(new HttpException(404, 'No logged in account'));
         }
 
-        res.status(200).send({ account: req.account });
+        res.status(200).send({ data: req.account });
+    };
+
+    private getPremiumStatus = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            if (!req.account) {
+                return next(new HttpException(404, 'No logged in account'));
+            }
+            const isPremium = await req.account.isValidPremium();
+            res.status(200).send({ data: isPremium });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private adminDelete = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const { _id } = req.body;
+            const account = await this.AccountService.adminDelete(_id);
+
+            res.status(200).json({ data: account });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private adminGet = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const props = req.body as Props;
+
+            const accounts = (await this.AccountService.adminGet(
+                props
+            )) as Array<Account>;
+
+            res.status(200).json({ data: accounts });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private adminFind = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const props = req.body as Props;
+            const accounts = await this.AccountService.adminFind(props);
+
+            res.status(200).json({ data: accounts });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private adminUpdateRole = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const { _id, role } = req.body;
+
+            const account = await this.AccountService.adminUpdateRole(
+                _id,
+                role
+            );
+
+            res.status(200).json({ data: account });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private adminCreate = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const {
+                name,
+                email,
+                password,
+                birth_date,
+                sex,
+                diabetes_type,
+                // localization,
+                high_sugar,
+                phone,
+                low_sugar,
+                premiumExpires,
+            } = req.body;
+
+            const token = await this.AccountService.adminCreate(
+                email,
+                password,
+                name,
+                birth_date,
+                sex,
+                diabetes_type,
+                // localization,
+                high_sugar,
+                phone,
+                low_sugar,
+                premiumExpires
+            );
+
+            res.status(201).json({ data: token });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
     };
 }
 

@@ -2,12 +2,12 @@ import Joi from 'joi';
 
 const create = Joi.object({
     name: Joi.string().required(),
-    presize_equiv: Joi.number().required(),
-    relative_equiv: Joi.number().required(),
-    presize_equiv_unit: Joi.string().required(),
-    relative_equiv_unit: Joi.string().required(),
-    presize_equiv_gCHO: Joi.number().required(),
-    relative_equiv_gCHO: Joi.number().required(),
+    presize_equiv: Joi.number(),
+    relative_equiv: Joi.number(),
+    presize_equiv_unit: Joi.string(),
+    relative_equiv_unit: Joi.string(),
+    presize_equiv_gCHO: Joi.number(),
+    relative_equiv_gCHO: Joi.number(),
     type: Joi.string().required(),
 });
 

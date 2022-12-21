@@ -8,7 +8,6 @@ const create = Joi.object({
     relative_equiv_unit: Joi.string().required(),
     presize_equiv_gCHO: Joi.number().required(),
     relative_equiv_gCHO: Joi.number().required(),
-    account_id: Joi.string().hex().length(24),
 });
 
 const update = Joi.object({
@@ -20,7 +19,6 @@ const update = Joi.object({
     relative_equiv_unit: Joi.string(),
     presize_equiv_gCHO: Joi.number(),
     relative_equiv_gCHO: Joi.number(),
-    account_id: Joi.string().hex().length(24),
 });
 
 const delete0 = Joi.object({
@@ -38,10 +36,14 @@ const find = Joi.object({
     relative_equiv_gCHO: Joi.number(),
     account_id: Joi.string().hex().length(24),
 });
+const adminGet = Joi.object({
+    account_id: Joi.string().hex().length(24),
+});
 
 export default {
     create,
     update,
     delete0,
     find,
+    adminGet,
 };

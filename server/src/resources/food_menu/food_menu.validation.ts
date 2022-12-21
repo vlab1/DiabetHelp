@@ -3,9 +3,9 @@ import Joi from 'joi';
 const create = Joi.object({
     food_id: Joi.string().hex().length(24).required(),
     menu_id: Joi.string().hex().length(24).required(),
-    foodModel: Joi.string().valid('Food','AccountFood').required(),
+    foodModel: Joi.string().valid('Food', 'AccountFood').required(),
     count: Joi.number().required(),
-    equiv_type: Joi.string().valid('presize','relative').required(),
+    equiv_type: Joi.string().valid('presize', 'relative').required(),
 });
 
 const update = Joi.object({
@@ -24,7 +24,6 @@ const delete0 = Joi.object({
 const get = Joi.object({
     menu_id: Joi.string().hex().length(24),
 });
-
 
 const find = Joi.object({
     _id: Joi.string().hex().length(24),

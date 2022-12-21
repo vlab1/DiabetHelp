@@ -6,6 +6,7 @@ import validate from '@/resources/record/record.validation';
 import RecordService from '@/resources/record/record.service';
 import authenticated from '@/middleware/authenticated.middleware';
 import Props from '@/utils/types/props.type';
+import permission from '@/middleware/admin.permission.middleware';
 
 class RecordController implements Controller {
     public path = '/record';
@@ -39,7 +40,27 @@ class RecordController implements Controller {
         this.router.get(
             `${this.path}/find`,
             validationMiddleware(validate.find),
+            authenticated,
             this.find
+        );
+        this.router.get(
+            `${this.path}/statistics`,
+            authenticated,
+            this.statistics
+        );
+        this.router.get(
+            `${this.path}/admin/get`,
+            validationMiddleware(validate.adminGet),
+            authenticated,
+            permission,
+            this.adminGet
+        );
+        this.router.delete(
+            `${this.path}/admin/delete`,
+            validationMiddleware(validate.delete0),
+            authenticated,
+            permission,
+            this.adminDelete
         );
     }
 
@@ -49,21 +70,21 @@ class RecordController implements Controller {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { glucose, comment, date, account_id, weight } = req.body;
+            const { glucose, comment, date, weight } = req.body;
 
-            const  creator_id  = req.account._id;
+            const account_id = req.account._id;
 
             const record = await this.RecordService.create(
                 glucose,
                 comment,
                 date,
-                account_id ? account_id : creator_id,
+                account_id,
                 weight
             );
 
-            res.status(201).json({ record });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot create record'));
+            res.status(201).json({ data: record });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -73,7 +94,9 @@ class RecordController implements Controller {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { _id, glucose, comment, date, account_id, weight } = req.body;
+            const { _id, glucose, comment, date, weight } = req.body;
+
+            const account_id = req.account._id;
 
             const record = await this.RecordService.update(
                 _id,
@@ -84,9 +107,9 @@ class RecordController implements Controller {
                 weight
             );
 
-            res.status(200).json({ record });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot update record'));
+            res.status(200).json({ data: record });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -98,11 +121,13 @@ class RecordController implements Controller {
         try {
             const { _id } = req.body;
 
-            const record = await this.RecordService.delete(_id);
+            const account_id = req.account._id;
 
-            res.status(200).json({ record });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot delete record'));
+            const record = await this.RecordService.delete(_id, account_id);
+
+            res.status(200).json({ data: record });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -112,13 +137,30 @@ class RecordController implements Controller {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const  account_id  = req.account._id;
+            const account_id = req.account._id;
 
             const records = await this.RecordService.get(account_id);
 
-            res.status(200).json({ records });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot found records'));
+            res.status(200).json({ data: records });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    
+    private statistics = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const account_id = req.account._id;
+
+            const records = await this.RecordService.statistics(account_id);
+
+            res.status(200).json({ data: records });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -130,11 +172,42 @@ class RecordController implements Controller {
         try {
             const props = req.body as Props;
 
-            const records = await this.RecordService.find(props);
+            const account_id = req.account._id;
+            const records = await this.RecordService.find(props, account_id);
 
-            res.status(200).json({ records });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot found records'));
+            res.status(200).json({ data: records });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private adminGet = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const props = req.body as Props;
+            const records = await this.RecordService.adminGet(props);
+
+            res.status(200).json({ data: records });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private adminDelete = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const { _id } = req.body;
+            const record = await this.RecordService.adminDelete(_id);
+
+            res.status(200).json({ data: record });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 }

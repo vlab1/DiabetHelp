@@ -7,6 +7,7 @@ import MenuService from '@/resources/menu/menu.service';
 import authenticated from '@/middleware/authenticated.middleware';
 import Props from '@/utils/types/props.type';
 import { Schema } from 'mongoose';
+import permission from '@/middleware/admin.permission.middleware';
 
 class MenuController implements Controller {
     public path = '/menu';
@@ -40,7 +41,28 @@ class MenuController implements Controller {
         this.router.get(
             `${this.path}/find`,
             validationMiddleware(validate.find),
+            authenticated,
             this.find
+        );
+        this.router.get(
+            `${this.path}/calculator`,
+            validationMiddleware(validate.calculator),
+            authenticated,
+            this.calculator
+        );
+        this.router.get(
+            `${this.path}/admin/get`,
+            validationMiddleware(validate.adminGet),
+            authenticated,
+            permission,
+            this.adminGet
+        );
+        this.router.delete(
+            `${this.path}/admin/delete`,
+            validationMiddleware(validate.delete0),
+            authenticated,
+            permission,
+            this.adminDelete
         );
     }
 
@@ -50,18 +72,15 @@ class MenuController implements Controller {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { account_id, name } = req.body;
+            const { name } = req.body;
 
-            const creator_id = req.account._id;
+            const account_id = req.account._id;
 
-            const menu = await this.MenuService.create(
-                account_id ? account_id : creator_id,
-                name
-            );
+            const menu = await this.MenuService.create(account_id, name);
 
-            res.status(201).json({ menu });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot create menu'));
+            res.status(201).json({ data: menu });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -71,13 +90,15 @@ class MenuController implements Controller {
         next: NextFunction
     ): Promise<Response | void> => {
         try {
-            const { _id, account_id, name } = req.body;
+            const { _id, name } = req.body;
 
-            const menu = await this.MenuService.update(_id, account_id, name);
+            const account_id = req.account._id;
 
-            res.status(200).json({ menu });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot update menu'));
+            const menu = await this.MenuService.update(_id, name, account_id);
+
+            res.status(200).json({ data: menu });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -88,12 +109,12 @@ class MenuController implements Controller {
     ): Promise<Response | void> => {
         try {
             const { _id } = req.body;
+            const account_id = req.account._id;
+            const menu = await this.MenuService.delete(_id, account_id);
 
-            const menu = await this.MenuService.delete(_id);
-
-            res.status(200).json({ menu });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot delete menu'));
+            res.status(200).json({ data: menu });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -107,9 +128,9 @@ class MenuController implements Controller {
 
             const menu = await this.MenuService.get(account_id);
 
-            res.status(200).json({ menu });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot found menu'));
+            res.status(200).json({ data: menu });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -120,12 +141,62 @@ class MenuController implements Controller {
     ): Promise<Response | void> => {
         try {
             const props = req.body as Props;
+            const account_id = req.account._id;
+            const menu = await this.MenuService.find(props, account_id);
 
-            const menu = await this.MenuService.find(props);
+            res.status(200).json({ data: menu });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
 
-            res.status(200).json({ menu });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot found menu'));
+    private calculator = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const { menu_id } = req.body;
+            const account_id = req.account._id;
+
+            const calculator = await this.MenuService.calculator(
+                menu_id,
+                account_id
+            );
+
+            res.status(200).json({ data: calculator });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private adminGet = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const props = req.body as Props;
+            const menu = await this.MenuService.adminGet(props);
+
+            res.status(200).json({ data: menu });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
+        }
+    };
+
+    private adminDelete = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<Response | void> => {
+        try {
+            const { _id } = req.body;
+            const menu = await this.MenuService.adminDelete(_id);
+
+            res.status(200).json({ data: menu });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 }

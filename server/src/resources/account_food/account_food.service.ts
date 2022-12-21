@@ -32,8 +32,8 @@ class AccountFoodService {
             });
 
             return account_food;
-        } catch (error) {
-            throw new Error('Unable to create account food');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -52,18 +52,30 @@ class AccountFoodService {
         account_id: Schema.Types.ObjectId
     ): Promise<AccountFood | Error> {
         try {
+            const account_food_temp = await this.account_food.findById(_id);
+
+            if (!account_food_temp) {
+                throw new Error('Unable to find account food');
+            }
+
+            if (
+                account_food_temp.account_id.toString() !==
+                account_id.toString()
+            ) {
+                throw new Error('You are not allowed to get this account food');
+            }
+
             const account_food = await this.account_food
                 .findByIdAndUpdate(
                     _id,
                     {
                         name: name,
-                        presize_equiv:  presize_equiv,
+                        presize_equiv: presize_equiv,
                         relative_equiv: relative_equiv,
-                        presize_equiv_unit:  presize_equiv_unit,
+                        presize_equiv_unit: presize_equiv_unit,
                         relative_equiv_unit: relative_equiv_unit,
                         presize_equiv_gCHO: presize_equiv_gCHO,
                         relative_equiv_gCHO: relative_equiv_gCHO,
-                        account_id: account_id,
                     },
                     { new: true }
                 )
@@ -73,12 +85,12 @@ class AccountFoodService {
                 });
 
             if (!account_food) {
-                throw new Error('Unable to update account food with thad id');
+                throw new Error('Unable to update account food with that data');
             }
 
             return account_food;
-        } catch (error) {
-            throw new Error('Unable to change account food');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -87,9 +99,25 @@ class AccountFoodService {
      */
 
     public async delete(
-        _id: Schema.Types.ObjectId
+        _id: Schema.Types.ObjectId,
+        account_id: Schema.Types.ObjectId
     ): Promise<AccountFood | Error> {
         try {
+            const account_food_temp = await this.account_food.findById(_id);
+
+            if (!account_food_temp) {
+                throw new Error('Unable to find account food');
+            }
+
+            if (
+                account_food_temp.account_id.toString() !==
+                account_id.toString()
+            ) {
+                throw new Error(
+                    'You are not allowed to delete this account food'
+                );
+            }
+
             const account_food = await this.account_food
                 .findByIdAndDelete(_id)
                 .populate({
@@ -98,12 +126,12 @@ class AccountFoodService {
                 });
 
             if (!account_food) {
-                throw new Error('Unable to delete account food with that id');
+                throw new Error('Unable to delete account food with that data');
             }
 
             return account_food;
-        } catch (error) {
-            throw new Error('Unable to delete account food');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -128,8 +156,8 @@ class AccountFoodService {
             }
 
             return account_food;
-        } catch (error) {
-            throw new Error('Unable to find account food');
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 
@@ -138,9 +166,12 @@ class AccountFoodService {
      */
 
     public async find(
-        props: Props
+        props: Props,
+        account_id: Schema.Types.ObjectId
     ): Promise<AccountFood | Array<AccountFood> | Error> {
         try {
+            props.account_id = account_id;
+
             const food = await this.account_food
                 .find(props, null, {
                     sort: { name: 1 },
@@ -155,8 +186,48 @@ class AccountFoodService {
             }
 
             return food;
-        } catch (error) {
-            throw new Error('Unable to find food');
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    /**
+     * Attempt to find all account food
+     */
+    public async adminGet(
+        props: Props
+    ): Promise<AccountFood | Array<AccountFood> | Error> {
+        try {
+            const account_food = await this.account_food.find(props, null, {
+                sort: { name: 1 },
+            });
+            if (!account_food) {
+                throw new Error('Unable to find account food');
+            }
+
+            return account_food;
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+
+    /**
+     * Attempt to delete account food
+     */
+
+    public async adminDelete(
+        _id: Schema.Types.ObjectId
+    ): Promise<AccountFood | Error> {
+        try {
+            const account_food = await this.account_food.findByIdAndDelete(_id);
+
+            if (!account_food) {
+                throw new Error('Unable to delete account food with that data');
+            }
+
+            return account_food;
+        } catch (error: any) {
+            throw new Error(error.message);
         }
     }
 }

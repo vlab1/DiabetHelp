@@ -6,6 +6,7 @@ import validate from '@/resources/food/food.validation';
 import FoodService from '@/resources/food/food.service';
 import authenticated from '@/middleware/authenticated.middleware';
 import Props from '@/utils/types/props.type';
+import permission from '@/middleware/admin.permission.middleware';
 
 class FoodController implements Controller {
     public path = '/food';
@@ -20,18 +21,21 @@ class FoodController implements Controller {
         this.router.post(
             `${this.path}/create`,
             validationMiddleware(validate.create),
+            permission,
             authenticated,
             this.create
         );
         this.router.put(
             `${this.path}/update`,
             validationMiddleware(validate.update),
+            permission,
             authenticated,
             this.update
         );
         this.router.delete(
             `${this.path}/delete`,
             validationMiddleware(validate.delete0),
+            permission,
             authenticated,
             this.delete
         );
@@ -71,9 +75,9 @@ class FoodController implements Controller {
                 type
             );
 
-            res.status(201).json({ food });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot create food'));
+            res.status(201).json({ data: food });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -107,9 +111,9 @@ class FoodController implements Controller {
                 type
             );
 
-            res.status(200).json({ food });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot update food'));
+            res.status(200).json({ data: food });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -123,9 +127,9 @@ class FoodController implements Controller {
 
             const food = await this.FoodService.delete(_id);
 
-            res.status(200).json({ food });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot delete food'));
+            res.status(200).json({ data: food });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -137,9 +141,9 @@ class FoodController implements Controller {
         try {
             const food = await this.FoodService.get();
 
-            res.status(200).json({ food });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot found food'));
+            res.status(200).json({ data: food });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 
@@ -153,9 +157,9 @@ class FoodController implements Controller {
 
             const food = await this.FoodService.find(props);
 
-            res.status(200).json({ food });
-        } catch (error) {
-            next(new HttpException(400, 'Cannot found food'));
+            res.status(200).json({ data: food });
+        } catch (error: any) {
+            next(new HttpException(400, error.message));
         }
     };
 }

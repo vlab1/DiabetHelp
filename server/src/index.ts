@@ -8,7 +8,6 @@ import MenuController from '@/resources/menu/menu.controller';
 import FoodController from '@/resources/food/food.controller';
 import AccountFoodController from '@/resources/account_food/account_food.controller';
 import FoodMenuController from '@/resources/food_menu/food_menu.controller';
-import CalculatorController from '@/resources/calculator/calculator.controller';
 
 validateEnv();
 
@@ -19,8 +18,7 @@ const app = new App(
         new MenuController(),
         new FoodController(),
         new AccountFoodController(),
-        new FoodMenuController(),
-        new CalculatorController(),
+        new FoodMenuController()
     ],
     Number(process.env.PORT)
 );

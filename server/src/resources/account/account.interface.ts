@@ -8,12 +8,15 @@ export default interface Account extends Document {
     birth_date: Date;
     sex: string;
     diabetes_type: number;
-    localization: string;
-    // isPremium: boolean;
+    // localization: string;
     high_sugar: number;
     low_sugar: number;
     premiumExpires: Date;
-
+    role: string;
+    phone: string;
+    paymentKeys: Array<string>;
+    allPaymentKeys: Array<string>;
+    
     getUpdate(): Promise<Error | Object>;
     setUpdate(obj: Object): Promise<Error | boolean>;
     getQuery(): Promise<Error | Object>;

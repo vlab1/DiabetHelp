@@ -1,12 +1,12 @@
 import { Schema, model } from 'mongoose';
-import Menu from '@/resources/menu/menu.interface';
+import { Menu } from '@/resources/menu/menu.interface';
 import FoodMenuModel from '../food_menu/food_menu.model';
 
 const MenuSchema = new Schema(
     {
         account_id: {
             type: Schema.Types.ObjectId,
-            ref: "Accounts"
+            ref: 'Accounts',
         },
         name: {
             type: String,
@@ -15,7 +15,7 @@ const MenuSchema = new Schema(
     { timestamps: true }
 );
 
-MenuSchema.post("findOneAndDelete", async function(result, next) { 
+MenuSchema.post('findOneAndDelete', async function (result, next) {
     await FoodMenuModel.deleteMany({ menu_id: result._id });
     next();
 });
@@ -32,6 +32,5 @@ MenuSchema.pre(
         next();
     }
 );
-
 
 export default model<Menu>('Menu', MenuSchema);

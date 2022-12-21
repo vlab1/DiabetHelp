@@ -36,7 +36,7 @@ const FoodSchema = new Schema(
     { timestamps: true }
 );
 
-FoodSchema.post("findOneAndDelete", async function(result, next) { 
+FoodSchema.post('findOneAndDelete', async function (result, next) {
     await FoodMenuModel.deleteMany({ food_id: result._id });
     next();
 });
