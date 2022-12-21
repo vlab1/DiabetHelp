@@ -1,7 +1,6 @@
 import { Filter } from "react-admin";
 
 const apiUrl = process.env.REACT_APP_URL;
-const token = localStorage.getItem("token");
 
 export const dataProvider = {
   getList: (resource, params) => {
@@ -16,7 +15,7 @@ export const dataProvider = {
       body: null,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     if (params.filter.type && params.filter.type.length >= 1) {
@@ -26,7 +25,7 @@ export const dataProvider = {
         body: null,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
     }
@@ -41,7 +40,7 @@ export const dataProvider = {
         body: null,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
     }
@@ -58,7 +57,7 @@ export const dataProvider = {
         body: null,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
     }
@@ -92,7 +91,7 @@ export const dataProvider = {
       body: null,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
 
@@ -115,7 +114,7 @@ export const dataProvider = {
   update: async (resource, params) => {
     let headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     let query = "";
     let body = {};
@@ -161,7 +160,7 @@ export const dataProvider = {
   create: (resource, params) => {
     let headers = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     };
     let query = "";
     let body = {};
@@ -213,7 +212,7 @@ export const dataProvider = {
       body: body,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     return fetch(request)
@@ -249,7 +248,7 @@ export const dataProvider = {
           body: body,
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
         await fetch(request)
