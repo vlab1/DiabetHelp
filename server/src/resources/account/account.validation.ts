@@ -1,28 +1,28 @@
 import Joi from 'joi';
 
 const register = Joi.object({
-    name: Joi.string().min(3).max(35).required(),
+    name: Joi.string().min(3).required(),
     email: Joi.string().email().required(),
-    password: Joi.string().min(3).max(35).required(),
+    password: Joi.string().min(3).required(),
     password_confirmation: Joi.any().equal(Joi.ref('password')).required(),
 });
 
 const login = Joi.object({
     email: Joi.string().email().required(),
-    password: Joi.string().min(3).max(35).required(),
+    password: Joi.string().min(3).required(),
 });
 
 const googleLogin = Joi.object({
     email: Joi.string().email().required(),
     passwordGoogle: Joi.string().min(6).required(),
-    name: Joi.string().min(3).max(15).required(),
+    name: Joi.string().min(3).required(),
 });
 
 const update = Joi.object({
-    name: Joi.string().min(3).max(35),
+    name: Joi.string().min(3),
     email: Joi.string().email(),
-    password: Joi.string().min(3).max(15),
-    passwordGoogle: Joi.string().min(3).max(15),
+    password: Joi.string().min(3),
+    passwordGoogle: Joi.string().min(3),
     birth_date: Joi.date(),
     sex: Joi.string(),
     diabetes_type: Joi.number(),
@@ -64,10 +64,10 @@ const adminDelete = Joi.object({
 
 const adminFind = Joi.object({
     _id: Joi.string().hex().length(24),
-    name: Joi.string().min(3).max(35),
+    name: Joi.string().min(3),
     email: Joi.string().email(),
-    password: Joi.string().min(3).max(15),
-    passwordGoogle: Joi.string().min(3).max(15),
+    password: Joi.string().min(3),
+    passwordGoogle: Joi.string().min(3),
     birth_date: Joi.date(),
     sex: Joi.string(),
     diabetes_type: Joi.number(),
@@ -83,8 +83,8 @@ const adminFind = Joi.object({
 
 const adminCreate = Joi.object({
     email: Joi.string().email().required(),
-    name: Joi.string().min(3).max(35).required(),
-    password: Joi.string().min(3).max(15).required(),
+    name: Joi.string().min(3).required(),
+    password: Joi.string().min(3).required(),
     birth_date: Joi.date(),
     sex: Joi.string(),
     diabetes_type: Joi.number(),
