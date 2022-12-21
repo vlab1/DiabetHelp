@@ -1,0 +1,389 @@
+{
+	"record": [
+		{
+			"comment": "my first data measurement, I'll leave it as a keepsake"
+		},
+		{
+			"comment": "need to make a new measurement in an hour"
+		},
+		{
+			"comment": "so far so good"
+		}
+	],
+	"menu": [
+		{
+			"name": "Breakfast"
+		},
+		{
+			"name": "Brunch"
+		},
+		{
+			"name": "Lunch"
+		},
+		{
+			"name": "Dinner"
+		},
+		{
+			"name": "Supper"
+		},
+		{
+			"name": "Snack"
+		}
+	],
+	"food_menu": [
+		{
+			"foodModel": "Food",
+			"count": 10,
+			"equiv_type": "relative"
+		},
+		{
+			"foodModel": "Food",
+			"count": 5,
+			"equiv_type": "relative"
+		},
+		{
+			"foodModel": "Food",
+			"count": 10,
+			"equiv_type": "relative"
+		},
+		{
+			"foodModel": "Food",
+			"count": 5,
+			"equiv_type": "relative"
+		}
+	],
+	"account_food": [
+		{
+			"name": "Crackerbread",
+			"presize_equiv": 100,
+			"relative_equiv": 2,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "slices",
+			"presize_equiv_gCHO": 80,
+			"relative_equiv_gCHO": 10
+		},
+		{
+			"name": "Waffle",
+			"presize_equiv": 100,
+			"relative_equiv": 1,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "waffle (45g)",
+			"presize_equiv_gCHO": 30,
+			"relative_equiv_gCHO": 15
+		},
+		{
+			"name": "White finger roll",
+			"presize_equiv": 100,
+			"relative_equiv": 1,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "piece",
+			"presize_equiv_gCHO": 52,
+			"relative_equiv_gCHO": 20
+		},
+		{
+			"name": "Garibaldi biscuits",
+			"presize_equiv": 100,
+			"relative_equiv": 2,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "biscuits",
+			"presize_equiv_gCHO": 70,
+			"relative_equiv_gCHO": 10
+		}
+	],
+	"account": [
+		{
+			"name": "Volodymyr Bukhalo",
+			"email": "volodymyr.bukhalo@gmail.com",
+			"password": "qwerty12345",
+			"birth_date": "1998-04-23T18:25:43.511Z",
+			"sex": "Male", 
+			"diabetes_type": 1, 
+			"localization": "en",
+			"high_sugar": 8,
+			"low_sugar": 3,
+			"premiumExpires": "2023-04-23T18:25:43.511Z",
+			"phone": "0980443504"
+		},
+		{
+			"name": "Arun Velazquez",
+			"email": "arun.velazquez@gmail.com",
+			"password": "qwerty12345",
+			"birth_date": "1978-04-23T18:25:43.511Z",
+			"sex": "Male", 
+			"diabetes_type": 1, 
+			"localization": "en",
+			"high_sugar": 8,
+			"low_sugar": 3,
+			"phone": "0980443504"
+		},
+		{
+			"name": "Keiran Rivera",
+			"email": "keiran.rivera@gmail.com",
+			"password": "qwerty12345",
+			"birth_date": "1984-04-23T18:25:43.511Z",
+			"sex": "Female", 
+			"diabetes_type": 1, 
+			"localization": "en",
+			"high_sugar": 8,
+			"low_sugar": 3,
+			"premiumExpires": "2023-04-23T18:25:43.511Z",
+			"phone": "0980443504"
+		},
+		{
+			"name": "Krishan Castillo",
+			"email": "krishan.castillo@gmail.com",
+			"password": "qwerty12345",
+			"birth_date": "1985-04-23T18:25:43.511Z",
+			"sex": "Male", 
+			"diabetes_type": 1, 
+			"localization": "en",
+			"high_sugar": 8,
+			"low_sugar": 3,
+			"phone": "0980443504"
+		},
+		{
+			"name": "Miguel Branch",
+			"email": "miguel.branch@gmail.com",
+			"password": "qwerty12345",
+			"birth_date": "1986-04-23T18:25:43.511Z",
+			"sex": "Female", 
+			"diabetes_type": 1, 
+			"localization": "en",
+			"high_sugar": 8,
+			"low_sugar": 3,
+			"phone": "0980443504"
+		},
+		{
+			"name": "Raheem Decker",
+			"email": "raheem.decker@gmail.com",
+			"password": "qwerty12345",
+			"birth_date": "2000-04-23T18:25:43.511Z",
+			"sex": "Female", 
+			"diabetes_type": 1, 
+			"localization": "en",
+			"high_sugar": 8,
+			"low_sugar": 3,
+			"phone": "0980443504"
+		}
+	],
+	"food": [
+		{
+			"name": "Bacon and egg McMuffin",
+			"relative_equiv": 140,
+			"relative_equiv_unit": "g",
+			"relative_equiv_gCHO": 20,
+			"type": "takeaways and eating out"
+		},
+		{
+			"name": "Burger King Chicken Royale",
+			"relative_equiv": 1,
+			"relative_equiv_unit": "piece",
+			"relative_equiv_gCHO": 45,
+			"type": "takeaways and eating out"
+		},
+		{
+			"name": "Indian samosa",
+			"relative_equiv": 1,
+			"relative_equiv_unit": "Medium (70g)",
+			"relative_equiv_gCHO": 15,
+			"type": "takeaways and eating out"
+		},
+		{
+			"name": "Aero Bar",
+			"presize_equiv": 100,
+			"relative_equiv": 48,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "g",
+			"presize_equiv_gCHO": 55,
+			"relative_equiv_gCHO": 25,
+			"type": "confectionery"
+		},
+		{
+			"name": "Bounty",
+			"presize_equiv": 100,
+			"relative_equiv": 57,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "g twin pack",
+			"presize_equiv_gCHO": 56,
+			"relative_equiv_gCHO": 30,
+			"type": "confectionery"
+		},
+		{
+			"name": "Caramel egg",
+			"presize_equiv": 100,
+			"relative_equiv": 40,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "g",
+			"presize_equiv_gCHO": 58,
+			"relative_equiv_gCHO": 20,
+			"type": "confectionery"
+		},
+		{
+			"name": "Almond slice",
+			"presize_equiv": 100,
+			"relative_equiv": 35,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "g",
+			"presize_equiv_gCHO": 20,
+			"relative_equiv_gCHO": 5,
+			"type": "cakes"
+		},
+		{
+			"name": "Chelsea bun",
+			"presize_equiv": 100,
+			"relative_equiv": 78,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "g",
+			"presize_equiv_gCHO": 56,
+			"relative_equiv_gCHO": 40,
+			"type": "cakes"
+		},
+		{
+			"name": "Gateau slice",
+			"presize_equiv": 100,
+			"relative_equiv": 85,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "g",
+			"presize_equiv_gCHO": 43,
+			"relative_equiv_gCHO": 38,
+			"type": "cakes"
+		},
+		{
+			"name": "Apple juice",
+			"presize_equiv": 100,
+			"relative_equiv": 80,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "mls",
+			"presize_equiv_gCHO": 12,
+			"relative_equiv_gCHO": 10,
+			"type": "fruit"
+		},
+		{
+			"name": "Peach",
+			"presize_equiv": 100,
+			"relative_equiv": 1,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "medium",
+			"presize_equiv_gCHO": 7,
+			"relative_equiv_gCHO": 10,
+			"type": "fruit"
+		},
+		{
+			"name": "Satsumas",
+			"presize_equiv": 100,
+			"relative_equiv": 2,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "fruits",
+			"presize_equiv_gCHO": 8,
+			"relative_equiv_gCHO": 10,
+			"type": "fruit"
+		},
+		{
+			"name": "Baked beans",
+			"presize_equiv": 100,
+			"relative_equiv": 3,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "tbsp",
+			"presize_equiv_gCHO": 15,
+			"relative_equiv_gCHO": 15,
+			"type": "vegetables"
+		},
+		{
+			"name": "Bagel",
+			"presize_equiv": 100,
+			"relative_equiv": 1,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "piece (70g)",
+			"presize_equiv_gCHO": 60,
+			"relative_equiv_gCHO": 40,
+			"type": "bread"
+		},
+		{
+			"name": "Frosties",
+			"presize_equiv": 100,
+			"relative_equiv": 7,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "tbsp",
+			"presize_equiv_gCHO": 95,
+			"relative_equiv_gCHO": 25,
+			"type": "breakfast cereals"
+		},
+		{
+			"name": "Dry cider",
+			"relative_equiv": 1,
+			"relative_equiv_unit": "pint",
+			"relative_equiv_gCHO": 15,
+			"type": "alcoholic drinks"
+		},
+		{
+			"name": "Choc ice",
+			"presize_equiv": 100,
+			"relative_equiv": 1,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "Individual (52g)",
+			"presize_equiv_gCHO": 28,
+			"relative_equiv_gCHO": 15,
+			"type": "dairy and desserts"
+		},
+		{
+			"name": "Macaroni cheese",
+			"presize_equiv": 100,
+			"relative_equiv": 300,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "g",
+			"presize_equiv_gCHO": 14,
+			"relative_equiv_gCHO": 40,
+			"type": "rice, pasta, grains"
+		},
+		{
+			"name": "Flapjack",
+			"presize_equiv": 100,
+			"relative_equiv": 1,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "square (60g)",
+			"presize_equiv_gCHO": 60,
+			"relative_equiv_gCHO": 35,
+			"type": "biscuits"
+		},
+		{
+			"name": "Bombay mix",
+			"presize_equiv": 100,
+			"relative_equiv": 1,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "Bag (30g)",
+			"presize_equiv_gCHO": 35,
+			"relative_equiv_gCHO": 10,
+			"type": "snacks"
+		},
+		{
+			"name": "Scampi",
+			"presize_equiv": 100,
+			"relative_equiv": 1,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "Average portion in breadcrumbs (150g)",
+			"presize_equiv_gCHO": 30,
+			"relative_equiv_gCHO": 45,
+			"type": "meat and fish products"
+		},
+		{
+			"name": "Lucozade",
+			"presize_equiv": 100,
+			"relative_equiv": 50,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "mls",
+			"presize_equiv_gCHO": 20,
+			"relative_equiv_gCHO": 10,
+			"type": "sugars and preserves"
+		},
+		{
+			"name": "Dried fruit",
+			"presize_equiv": 100,
+			"relative_equiv": 1,
+			"presize_equiv_unit": "g",
+			"relative_equiv_unit": "oz (25g)",
+			"presize_equiv_gCHO": 70,
+			"relative_equiv_gCHO": 15,
+			"type": "home baking"
+		}
+	]
+}
